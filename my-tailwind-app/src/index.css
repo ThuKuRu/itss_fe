@@ -22,3 +22,11 @@ code {
 .active {
   @apply bg-ct-button-hover text-red-500;
 }
+.has-tasks {
+  @apply text-gray-500;
+}
+
+.hidden-event {
+  @apply line-through;
+  color: #a9a9a9 !important;
+}
