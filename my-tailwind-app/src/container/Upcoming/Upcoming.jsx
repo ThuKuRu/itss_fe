@@ -45,16 +45,17 @@ const Upcomming = () => {
       toolbar.onNavigate("NEXT");
     };
 
-    // const goToToday = () => {
-    //   toolbar.onNavigate("TODAY");
-    // };
+    const goToWeek = () => {
+      toolbar.onNavigate("DAY");
+    };
+
     return (
-      <div className="flex justify-between mb-3">
+      <div className="flex justify-between mb-3 text-red-500">
         <button onClick={goToBack} className="flex items-center">
           <PiCaretDoubleLeftBold color="#a9a9a9" />
           <p className="text-sm text-gray-400 ml-1 pb-[2px] font-2">Back</p>
         </button>
-        <div className="flex items-center">
+        <div className="flex items-center cursor-pointer" onClick={goToWeek}>
           <PiCalendarBlankBold style={{ fontSize: "18px" }} />
           <p className="font-semibold ml-1 pb-[2px]">{toolbar.label}</p>
         </div>
@@ -91,20 +92,43 @@ const Upcomming = () => {
         break;
     }
 
+    const today = moment().add(-1, "days");
+
+    // const tasksCount = countTasksPerDay(tasks, event.start);
+
     return (
-      <div className="text-xs">
+      <div className={event.start < today ? "hidden-event" : ""}>
         <div className="flex mb-2">
           <input type="radio" />
-          <p className="p-1">{event.title}</p>
+          <p className="p-1 text-xs">{event.title}</p>
         </div>
         <div
-          className={`flex items-center text-[10px] font-medium py-1 ${priorityColor}`}
+          className={
+            event.start < today
+              ? "hidden-event flex items-center text-[10px] font-medium py-1"
+              : `flex items-center text-[10px] font-medium py-1 ${priorityColor}`
+          }
         >
           <IoIosFlag color={`${priorityColor}`} />
           <p>Priority {event.priority}</p>
         </div>
       </div>
     );
+  };
+
+  const countTasksPerDay = (tasks, date) => {
+    return tasks.filter((task) => {
+      return moment(task.start).isSame(date, "day");
+    }).length;
+  };
+
+  const dayPropGetter = (date) => {
+    const tasksCount = countTasksPerDay(tasks, date);
+    console.log(tasksCount);
+    return {
+      className: tasksCount > 0 ? "has-tasks" : "", // Thêm class 'has-tasks' nếu có tasks
+      // Thêm bất kỳ thuộc tính nào khác bạn muốn cho ngày
+    };
   };
 
   return (
@@ -129,6 +153,9 @@ const Upcomming = () => {
             margin-top: 8px;
             color: #000000 !important;
             border: 1px solid #a9a9a9 !important;
+          }
+          .rbc-today {
+            color: red;
           }
           .rbc-day-bg {
             border: none !important;
@@ -169,6 +196,7 @@ const Upcomming = () => {
         nowIndicator={false}
         components={{
           toolbar: CustomToolbar,
+          // day: DayColumn,
           event: EventComponent,
           agenda: () => null,
           month: () => null,
@@ -185,6 +213,7 @@ const Upcomming = () => {
           };
           return { style: newStyle };
         }}
+        dayPropGetter={dayPropGetter}
       />
     </div>
   );
