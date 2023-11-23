@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
@@ -6,36 +6,37 @@ import { PiCaretDoubleLeftBold } from "react-icons/pi";
 import { PiCaretDoubleRightBold } from "react-icons/pi";
 import { PiCalendarBlankBold } from "react-icons/pi";
 import { IoIosFlag } from "react-icons/io";
-
+import axios from "axios";
+import { UserContext } from "../../UserContext";
 const localizer = momentLocalizer(moment);
-
-const tasks = [
-  { title: "Task 1", start: new Date(2023, 10, 20), priority: "1" },
-  { title: "Task 2", start: new Date(2023, 10, 20), priority: "2" },
-  { title: "Task 3", start: new Date(2023, 10, 21), priority: "3" },
-  { title: "Task 4", start: new Date(2023, 10, 22), priority: "1" },
-  { title: "Task 5", start: new Date(2023, 10, 23), priority: "2" },
-  { title: "Task 6", start: new Date(2023, 10, 21), priority: "3" },
-  { title: "Task 7", start: new Date(2023, 10, 22), priority: "1" },
-  { title: "Task 8", start: new Date(2023, 10, 23), priority: "2" },
-  { title: "Task 9", start: new Date(2023, 10, 24), priority: "3" },
-  { title: "Task 10", start: new Date(2023, 10, 23), priority: "1" },
-  { title: "Task 11", start: new Date(2023, 10, 24), priority: "2" },
-  { title: "Task 12", start: new Date(2023, 10, 23), priority: "3" },
-  { title: "Task 13", start: new Date(2023, 10, 23), priority: "1" },
-  { title: "Task 14", start: new Date(2023, 10, 24), priority: "2" },
-  { title: "Task 15", start: new Date(2023, 10, 23), priority: "3" },
-  { title: "Task 16", start: new Date(2023, 10, 23), priority: "3" },
-  { title: "Task 17", start: new Date(2023, 10, 28), priority: "2" },
-  { title: "Task 18", start: new Date(2023, 10, 28), priority: "3" },
-  { title: "Task 19", start: new Date(2023, 10, 27), priority: "1" },
-  { title: "Task 20", start: new Date(2023, 10, 30), priority: "2" },
-  { title: "Task 21", start: new Date(2023, 10, 29), priority: "3" },
-  { title: "Task 22", start: new Date(2023, 10, 27), priority: "1" },
-  { title: "Học bơi", start: new Date(2023, 10, 15), priority: "1" },
-];
-
+//   { title: "Task 1", start: new Date(2023, 10, 20), priority: "1" },
 const Upcomming = () => {
+  const [tasks, setTasks] = useState([]);
+  const user = useContext(UserContext);
+  useEffect(()=>{
+    axios.get("http://localhost:4000/all-tasks", {
+      headers: {
+        authorization: user.jwt
+      }
+    }).then((res)=>{
+      let dataRaw = res.data;
+      console.log(dataRaw);
+      let data = dataRaw.map((item)=>{
+        let date = new Date(item.due_date);
+        return{
+          id: item.task_id,
+          title: item.task_name,
+          description: item.description,
+          start: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+          priority: item.priority_id,
+          label: item.label_id,
+        }
+      })
+      setTasks(data);
+    }).catch((err)=>{
+      console.log(err);
+    })
+  },[]);
   const CustomToolbar = (toolbar) => {
     const goToBack = () => {
       toolbar.onNavigate("PREV");
@@ -124,7 +125,6 @@ const Upcomming = () => {
 
   const dayPropGetter = (date) => {
     const tasksCount = countTasksPerDay(tasks, date);
-    console.log(tasksCount);
     return {
       className: tasksCount > 0 ? "has-tasks" : "", // Thêm class 'has-tasks' nếu có tasks
       // Thêm bất kỳ thuộc tính nào khác bạn muốn cho ngày

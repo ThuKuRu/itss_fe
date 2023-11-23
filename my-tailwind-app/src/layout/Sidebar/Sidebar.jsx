@@ -1,5 +1,5 @@
 import React from "react";
-import avatar from "../../img/thu_1.png";
+import avatar from "../../img/avatar.jpg";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { PiRectangleLight } from "react-icons/pi";
@@ -10,7 +10,13 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { TbCalendarUp } from "react-icons/tb";
 import { IoGridOutline } from "react-icons/io5";
 
+import { useContext } from "react";
+import { UserContext } from "../../UserContext";
+
+const secretKey = "itss-back-end";
+
 const Sidebar = ({ tab, setTab }) => {
+  const user = useContext(UserContext);
   return (
     <div className="flex flex-col w-[20vw] h-[100vh] bg-ct-sidebar-bg rounded p-2">
       <div className="flex justify-between">
@@ -20,7 +26,7 @@ const Sidebar = ({ tab, setTab }) => {
             alt="/"
             className="w-8 h-auto rounded-full border-4"
           />
-          <p className="font-semibold text-sm">User123</p>
+          <p className="font-semibold text-sm">tung.ct202</p>
           <IoIosArrowDown
             className="mt-[2px] text-xs font-extralight text-inherit"
             color="#c0c0cd"

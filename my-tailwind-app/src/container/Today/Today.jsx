@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CiCircleList } from "react-icons/ci";
 import { Header} from "semantic-ui-react";
 import TodosList from "./TodosList";
 import TodoForm from "./TodoForm";
-
-
-interface ReturnDate {
-  date: string;
-}
-
-export const useDate = (): ReturnDate => {
+import { UserContext } from "../../UserContext";
+import axios from "axios";
+export const useDate = () => {
+  
   const locale = 'en';
   const today = new Date();
 
@@ -24,10 +21,29 @@ export const useDate = (): ReturnDate => {
 
 const Today = () => {
   const {date} = useDate();
-
+  const user = useContext(UserContext);
   const[input, setInput]=useState("");
   const[todos, setTodos]=useState([]);
-  
+  useEffect(()=>{
+    axios.get("http://localhost:4000/today-tasks", {
+      headers: {
+        authorization: user.jwt
+      }
+    }).then((res)=>{
+      let dataRaw = res.data;
+      let data = dataRaw.map((item)=>{
+        return {
+          id: item.task_id,
+          title: item.task_name,
+          completed: false,
+        }
+      })
+      setTodos(data);
+    }).catch((err)=>{
+      console.log(err)
+    });
+  }, []);
+
 
 
   return (
