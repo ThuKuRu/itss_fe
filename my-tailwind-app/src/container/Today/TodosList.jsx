@@ -22,9 +22,9 @@ const TodosList = ({todos, setTodos, editTodo,setEditTodo}) => {
     return (
     <div>
         {todos.map((todo)=>(
-            <div className="flex" key={todo.id}>
-                <div className='grow h-14'>
-                <hr className='mb-3'/>
+            <div className="flex items-center border-b-[1px] border-solid border-gray-200 px-3" key={todo.id}>
+                <div className=' flex items-center grow h-14'>
+                {/* <hr className='mb-3'/> */}
                 <input 
                     type="checkbox" 
                     value={todo.title} 
@@ -37,14 +37,16 @@ const TodosList = ({todos, setTodos, editTodo,setEditTodo}) => {
                         fontSize: '18px', // Điều chỉnh giá trị này để thay đổi kích thước của chữ
                         textDecoration: todo.completed ? 'line-through' : 'none',
                     }}>{todo.title}</span>
-                <hr className='mt-2'/>
+
                 </div>
-                <div className='flex-none h-14'>   
+                <div className='flex-end'>
                     <Button className="ui button mb-4  " color='red' onClick={()=>handleDelete(todo)} >Delete</Button>
                     <Button className="ui button mb-4 " color='gray' onClick={() => {setPopup1(true);}}>Edit</Button>
-                </div> 
+                </div>
+                {/* <div className='flex-none h-14'>    */}
+                {/* </div>  */}
                 {popup1 && <PopUpFirst setPopup1={setPopup1} />} 
-                <hr/>
+                {/* <hr/> */}
                 
                     
             </div>

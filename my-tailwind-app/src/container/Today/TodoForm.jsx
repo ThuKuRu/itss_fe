@@ -59,7 +59,7 @@ const TodoForm = ({input,setInput,todos,setTodos}) => {
     
       return (
     
-        <Form onSubmit={onFormSubmit}>
+        <Form onSubmit={onFormSubmit} >
             <Form.Input 
                 type="text" 
                 placeholder="Task name" 
@@ -74,7 +74,7 @@ const TodoForm = ({input,setInput,todos,setTodos}) => {
                 className="task-input"
                 ref={descriptionRef}
             />
-            <div className="flex flex-row ">
+            <div className="flex flex-row mt-4 gap-2">
                 <Dropdown 
                     className="basis-2/3"
                     clearable 

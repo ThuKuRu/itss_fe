@@ -48,7 +48,7 @@ const Today = () => {
 
   return (
   <div>
-    <Header className="flex flex-col w-[80vw] h-[10vh] rounded p-10" >
+    <Header className="flex flex-col w-[78vw] h-[10vh] rounded p-10" >
       <div className="flex justify-between">
         <div class="">
           <strong className="font-lagre text-[26px] p-3"> Today </strong> 
@@ -67,7 +67,7 @@ const Today = () => {
     <hr/>
     
       
-    <div className="flex flex-col w-[80vw] h-fit  rounded pl-10 p-2">
+    <div className="flex flex-col w-[78vw] h-fit  rounded pl-10 p-2">
       <div>
         <TodosList 
           todos={todos}
@@ -76,8 +76,8 @@ const Today = () => {
       </div>
     </div>
     <hr />
-    <div className="flex flex-col w-[80vw] h-fit  rounded pl-10 p-2">  
-      <div>
+    <div className="flex flex-col w-[78vw] h-fit  rounded p-2">  
+      <div className="border-[1px] rounded border-solid border-gray-200 mt-1 p-4">
       <h3>Add new task</h3>
         <TodoForm 
           input={input}
