@@ -16,11 +16,11 @@ const TodoForm = ({input,setInput,todos,setTodos}) => {
         let today = new Date();
         console.log(priorityRef.current);
         axios.put("http://localhost:4000/task",{
-            taskName: input,
+            task_name: input,
             description: descriptionRef.current.value,
-            dueDate: today.getFullYear().toString() + "-"+(today.getMonth()+1).toString()+"-"+today.getDate().toString()+" "+ today.getHours().toString()+":"+today.getMinutes().toString()+":"+today.getSeconds().toString(),
-            priorityId: priorityRef.current.state.value,
-            labelId: 1
+            due_date: today.getFullYear().toString() + "-"+(today.getMonth()+1).toString()+"-"+today.getDate().toString()+" "+ today.getHours().toString()+":"+today.getMinutes().toString()+":"+today.getSeconds().toString(),
+            priority_id: priorityRef.current.state.value,
+            label_id: 1
         }, {
             headers: {
                 authorization: user.jwt
