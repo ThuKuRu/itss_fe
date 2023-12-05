@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { FaSearch } from "react-icons/fa";
+
 
 
 const SearchBar = () => {
@@ -19,6 +21,8 @@ const SearchBar = () => {
   };
 
   const searchBarStyle = {
+    display: 'flex',
+    alignItems: 'center',
     backgroundColor: '#ddd',
     width: '100%',
     padding: '10px',
@@ -31,22 +35,27 @@ const SearchBar = () => {
     width: '100%',
     padding: '5px',
     backgroundColor: '#ddd', 
-    color: 'white', 
+    color: 'black', 
     border: 'none',
+    backgroundColor: searchQuery ? 'white' : 'initial',
+  };
+
+  const iconStyle = {
+    marginRight: '5px', // Adjust the margin as needed
   };
 
   return (
     <div style={searchBarStyle}>
+      <FaSearch id="search-icon" style={iconStyle} />
       <input
         type="text"
         placeholder="Search..."
+        icon="search"
         value={searchQuery}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        
         style={inputStyle}
       />
-      
     </div>
   );
 };
