@@ -39,7 +39,7 @@ function Signup() {
     axios.post("http://localhost:4000/sign-up", {
       mail: email,
       password: password,
-      authMethod: "website registered",
+      auth_method: "website registered",
     }).then((response)=>{
         alert(response.data);
         navigate('/login');
