@@ -41,7 +41,9 @@ function Signup() {
       password: password,
       auth_method: "website registered",
     }).then((response)=>{
+        console.log(response);
         alert(response.data);
+        
         navigate('/login');
     }).catch((e)=>{     
       alert(e.response.data);
