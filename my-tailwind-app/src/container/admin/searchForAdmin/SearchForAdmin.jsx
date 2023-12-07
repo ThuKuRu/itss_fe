@@ -1,10 +1,10 @@
-import React, { memo, useMemo, useRef, useState } from "react";
+import React, {useRef, useState } from "react";
 import axios from "axios";
-import { UserContext } from "../../UserContext";
 import { useContext, useEffect } from "react";
-import TodosList from "../Today/TodosList";
-
-const Search = () => {
+import TodosList from "../../Today/TodosList";
+import { UserContext } from "../../../UserContext";
+import AdminTodoList from "../adminComponent/AdminTodolist";
+const SearchForAdmin = () => {
   const user = useContext(UserContext);
   const [labels, setLabels] = useState([]);
   const [todos, setTodos] = useState([]);
@@ -12,7 +12,7 @@ const Search = () => {
   const labelRef = useRef();
   const priorityRef = useRef();
   useEffect(()=>{
-    axios.get("http://localhost:4000/labels",{
+    axios.get("http://localhost:4000/admin/labels",{
       headers: {
         authorization: user.jwt
       }
@@ -22,7 +22,7 @@ const Search = () => {
       console.log(err);
     });
 
-    axios.get("http://localhost:4000/upcoming-tasks",{
+    axios.get("http://localhost:4000/admin/all-tasks",{
       headers: {
         authorization: user.jwt
       }
@@ -32,9 +32,8 @@ const Search = () => {
         return {
           id: item.task_id,
           title: item.task_name,
-          description: item.description,
           priority: item.priority_id,
-          dueDate: item.due_date,
+          username: item.user_name,
           completed: false,
         }
       })
@@ -45,7 +44,7 @@ const Search = () => {
 
   },[]);
   const search = ()=>{
-    axios.get("http://localhost:4000/upcoming-tasks",{
+    axios.get("http://localhost:4000/admin/all-tasks",{
       headers: {
         authorization: user.jwt
       }
@@ -55,9 +54,8 @@ const Search = () => {
         return {
           id: item.task_id,
           title: item.task_name,
-          description: item.description,
           priority: item.priority_id,
-          dueDate: item.due_date,
+          username: item.user_name,
           completed: false,
         }
       })
@@ -88,9 +86,9 @@ const Search = () => {
     <button onClick={search} style={{background:"blue", color:"white", padding:"10px", borderRadius:"5px", display:"inline", marginLeft:"10px"}}> Search </button>
     </div>
     <div className="result" style={{marginLeft:"100px", marginTop: "50px"}}>
-      {todos.length == 0? <p style={{textAlign:"center", fontSize:"20px", width:"500px", color:"gray"}}>NOT FOUND</p>:<TodosList todos={todos} setTodos={setTodos} editTodo={()=>{}} setEditTodo={()=>{}}/>}
+      {todos.length == 0? <p style={{textAlign:"center", fontSize:"20px", width:"500px", color:"gray"}}>NOT FOUND</p>:<AdminTodoList todos={todos} setTodos={setTodos} editTodo={()=>{}} setEditTodo={()=>{}}/>}
     </div>
   </div>;
 };
 
-export default Search;
+export default SearchForAdmin;

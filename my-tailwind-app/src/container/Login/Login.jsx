@@ -38,8 +38,10 @@ function Login() {
       mail: email,
       password: password
     }).then((res)=>{
-      console.log(res.data.jwt);
       user.setJwt(res.data.jwt);
+      user.setRole(res.data.role);
+      console.log(res.data.username);
+      user.setUsername(res.data.username);
       navigate("/");
     }).catch((err)=>{
       alert(err.response.data);
