@@ -54,14 +54,14 @@ const Upcomming = () => {
       <div className="flex justify-between mb-3 text-red-500">
         <button onClick={goToBack} className="flex items-center">
           <PiCaretDoubleLeftBold color="#a9a9a9" />
-          <p className="text-sm text-gray-400 ml-1 pb-[2px] font-2">Back</p>
+          <p className="text-[14px] text-gray-400 ml-1 pb-[2px] font-2">Back</p>
         </button>
         <div className="flex items-center cursor-pointer" onClick={goToWeek}>
-          <PiCalendarBlankBold style={{ fontSize: "18px" }} />
-          <p className="font-semibold ml-1 pb-[2px]">{toolbar.label}</p>
+          <PiCalendarBlankBold style={{ fontSize: "24px" }} />
+          <p className="font-semibold ml-1 pb-[2px] text-[24px]">{toolbar.label}</p>
         </div>
         <button onClick={goToNext} className="flex items-center">
-          <p className="text-sm text-gray-400 mr-1 mb-0 font-2">Next</p>
+          <p className="text-[14px] text-gray-400 mr-1 mb-0 font-2">Next</p>
           <PiCaretDoubleRightBold color="#a9a9a9" />
         </button>
       </div>
@@ -114,13 +114,13 @@ const Upcomming = () => {
         <div className={event.start < today ? "hidden-event" : ""}>
           <div className="flex mb-2">
             <input type="radio" />
-            <p className="p-1 text-xs">{event.title}</p>
+            <p className="p-1 text-[14px]">{event.title}</p>
           </div>
           <div
             className={
               event.start < today
-                ? "hidden-event flex items-center text-[10px] font-medium py-1"
-                : `flex items-center text-[10px] font-medium py-1 ${priorityColor}`
+                ? "hidden-event flex items-center text-[12px] font-medium py-1"
+                : `flex items-center text-[12px] font-medium py-1 ${priorityColor}`
             }
           >
             <IoIosFlag color={`${priorityColor}`} />
@@ -130,7 +130,7 @@ const Upcomming = () => {
       );
     }else{
       return(
-        <div><span style={{color: "red"}}>+</span>{"   "}<span style={{color:"gray"}}>Add Task</span></div>
+        <div className="flex items-center justify-center font-semibold"><span style={{color: "red"}}>+</span>{"   "}<span style={{color:"red"}}> Add Task</span></div>
       )
     }
   };
@@ -163,6 +163,7 @@ const Upcomming = () => {
             padding: 10px 0; 
             border-bottom: 2px solid #a9a9a9  !important;
             margin: 0 4px;
+            font-size: 16px;
           }
           .rbc-row-content {
             margin-top: 5px;

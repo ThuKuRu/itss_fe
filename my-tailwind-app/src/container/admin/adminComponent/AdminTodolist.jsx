@@ -36,9 +36,9 @@ function AdminTodoList({todos, setTodos, editTodo,setEditTodo}) {
                 </div>
                 <span className="flex-end" style={{marginRight: "20px", fontWeight: "bold"}}>{todo.username}</span>
                 <div className='flex-end'>
-                    <button style={{marginLeft:"5px", background: "blue",padding:"5px", borderRadius:"5px", width: "50px", color: "white"}} onClick={()=>{setTaskId(todo.id);setOpenPopup(true)}} >View</button>
-                    <button style={{marginLeft:"5px", background: "red",padding:"5px", borderRadius:"5px", width: "50px", color: "white"}} onClick={()=>handleDelete(todo)} >Delete</button>
-                    <button style={{marginLeft:"5px", background: "green",padding:"5px", borderRadius:"5px", width: "50px", color: "white"}}  onClick={() => {setPopup1(true);}}>Edit</button>
+                    <button className='ui button' style={{marginLeft:"5px", background: "blue", color: "white"}} onClick={()=>{setTaskId(todo.id);setOpenPopup(true)}} >View</button>
+                    <button className='ui button' style={{marginLeft:"5px", background: "red", color: "white"}} onClick={()=>handleDelete(todo)} >Delete</button>
+                    <button className='ui button' style={{marginLeft:"5px", background: "green", color: "white"}}  onClick={() => {setPopup1(true);}}>Edit</button>
                 </div>
                 {openPopup?<PopupDescriptionAdmin taskId={taskId} back={()=>{setOpenPopup(false)}}/>:<></>}        
             </div>

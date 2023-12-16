@@ -68,24 +68,24 @@ const SearchForAdmin = () => {
     })
   }
 
-  return <div>
-    <div className="search" style={{marginLeft:"100px"}}>
-    <input ref={searchRef} style={{border:"1px solid gray", borderRadius:"5px", padding: "10px", width:"300px"}} type="text" placeholder="Search task name"/>
-    <select ref={priorityRef} style={{border:"1px solid gray", borderRadius:"5px", padding: "10px", marginLeft:"10px", marginTop: "10px"}} name="priority">
+  return <div className=" flex flex-col w-[78vw]">
+    <div className="flex items-center">
+    <input className=" basis-8/12" ref={searchRef} style={{border:"1px solid gray", borderRadius:"5px", padding: "10px"}} type="text" placeholder="Search task name"/>
+    <select className=" basis-2/12" ref={priorityRef} style={{border:"1px solid gray", borderRadius:"5px", padding: "10px", marginLeft:"10px"}} name="priority">
       <option value={1}>priority 1</option>
       <option value={2}>priority 2</option>
       <option value={3}>priority 3</option>
       <option value={4}>priority 4</option>
     </select>
     <label/>
-    <select ref={labelRef} style={{border:"1px solid gray", borderRadius:"5px", padding: "10px", marginLeft:"10px", marginTop: "10px"}} name="label">
+    <select className=" basis-1/12" ref={labelRef} style={{border:"1px solid gray", borderRadius:"5px", padding: "10px", marginLeft:"10px"}} name="label">
       {labels.map((item)=>{
         return (<option value={item.label_id}>{item.label_name}</option>)
       })}
     </select>
-    <button onClick={search} style={{background:"blue", color:"white", padding:"10px", borderRadius:"5px", display:"inline", marginLeft:"10px"}}> Search </button>
+    <button className="ui button font-semibold" onClick={search} style={{background:"blue", color:"white", display:"inline", marginLeft:"10px"}}> Search </button>
     </div>
-    <div className="result" style={{marginLeft:"100px", marginTop: "50px"}}>
+    <div className="result  basis-1/12" style={{ marginTop: "50px"}}>
       {todos.length == 0? <p style={{textAlign:"center", fontSize:"20px", width:"500px", color:"gray"}}>NOT FOUND</p>:<AdminTodoList todos={todos} setTodos={setTodos} editTodo={()=>{}} setEditTodo={()=>{}}/>}
     </div>
   </div>;

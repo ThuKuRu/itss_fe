@@ -31,16 +31,16 @@ function PopupDescription({taskName, taskDescription, taskDate, taskPriority, ta
         <div style={popupBackground}>
             <div style={popupContainer}>
             <div style={{display: "flex"}}>
-            <button style={{position:"absolute", top: "10px", left: "10px", color: "blue", padding:"5px", border:"1px solid gray", borderRadius: "5px"}} onClick={()=>{back()}}>Back</button>
-                    <div style={{margin: "0",width: "400px", height: "500px", borderRight: "2px solid gray", padding: "40px 30px 30px 30px"}}>
-                        <h2>{taskName}</h2>
+            <button className="ui button" style={{position:"absolute", top: "10px", left: "10px", color: "blue", border:"1px solid #d9d9d9"}} onClick={()=>{back()}}>Back</button>
+                    <div style={{width: "400px", height: "500px", borderRight: "2px solid gray", padding: "40px 30px 30px 30px"}}>
+                        <h2 className="text-[24px] mt-[20px] pt-[20px]">{taskName}</h2>
                         <p>{taskDescription}</p>
                     </div>
-                    <div style={{width: "200px", background: "gray", borderRadius: "0px 12px 12px 0px", padding: "40px 20px 20px 20px"}}>
+                    <div style={{marginTop: 0, width: "200px", background: "#d9d9d9", borderRadius: "0px 12px 12px 0px", padding: "40px 20px 20px 20px"}}>
                         <span style={{fontWeight:"bold", color: "blue"}}>Due date</span>
-                        <p style={{color: "white"}}>{dueDate}</p>
+                        <p className="mt-[4px]">{dueDate}</p>
                         <span style={{fontWeight: "bold", color: "blue"}}>Priority</span>
-                        <p style={{color: "white"}}>{"Priority "+taskPriority}</p>
+                        <p className="mt-[4px]">{"Priority "+ taskPriority}</p>
                     </div>
                 </div> 
             </div>

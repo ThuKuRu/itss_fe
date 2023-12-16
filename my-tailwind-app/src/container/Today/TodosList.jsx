@@ -1,5 +1,4 @@
 import React,{useState} from 'react'
-import { Button} from 'semantic-ui-react'
 import PopUpFirst from './PopUpEditToday/PopUpFirst';
 import PopupDescription from '../popup/PopupTaskDescription';
 
@@ -42,9 +41,9 @@ const TodosList = ({todos, setTodos, editTodo,setEditTodo}) => {
 
                 </div>
                 <div className='flex-end'>
-                    <button style={{marginLeft:"5px", background: "blue",padding:"5px", borderRadius:"5px", width: "50px", color: "white"}} onClick={()=>{setTask(todo);setOpenDecriptionPopup(true)}} >View</button>
-                    <button style={{marginLeft:"5px", background: "red",padding:"5px", borderRadius:"5px", width: "50px", color: "white"}} onClick={()=>handleDelete(todo)} >Delete</button>
-                    <button style={{marginLeft:"5px", background: "green",padding:"5px", borderRadius:"5px", width: "50px", color: "white"}}  onClick={() => {setPopup1(true);}}>Edit</button>
+                    <button className='ui button' style={{marginLeft:"5px", background: "blue", color: "white"}} onClick={()=>{setTask(todo);setOpenDecriptionPopup(true)}} >View</button>
+                    <button className='ui button' style={{marginLeft:"5px", background: "red", color: "white"}} onClick={()=>handleDelete(todo)} >Delete</button>
+                    <button className='ui button' style={{marginLeft:"5px", background: "green", color: "white"}}  onClick={() => {setPopup1(true);}}>Edit</button>
                 </div>
                 {/* <div className='flex-none h-14'>    */}
                 {/* </div>  */}

@@ -76,7 +76,7 @@ const TodoForm = ({input,setInput,todos,setTodos}) => {
             />
             <div className="flex flex-row mt-4 gap-2">
                 <Dropdown 
-                    className="basis-2/3"
+                    className="basis-10/12"
                     clearable 
                     options={lvOptions} 
                     ref={priorityRef}
@@ -84,8 +84,8 @@ const TodoForm = ({input,setInput,todos,setTodos}) => {
                     selection   
                 />
             
-                <Button className="ui button basis-1/6" style={{padding:'5px'}} color="gray" >Cancel</Button>
-                <Button className="ui button basis-1/4" style={{padding:'5px'}} color="red" type="submit" >Add</Button>
+                <Button className="ui button basis-1/12" style={{padding:'5px'}} color="gray" >Cancel</Button>
+                <Button className="ui button basis-1/12" style={{padding:'5px'}} color="red" type="submit" >Add</Button>
 
             </div>
            
