@@ -1,4 +1,4 @@
-import React,{useEffect, useState, useContext} from "react";
+import React,{useEffect, useState, useContext, useRef} from "react";
 import Modal from "react-responsive-modal";
 import { Header, Button, Form } from "semantic-ui-react";
 import { IoIosArrowDown } from "react-icons/io";
@@ -8,12 +8,15 @@ import { faTint } from '@fortawesome/free-solid-svg-icons';
 import { faTag } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
 import { UserContext } from "../../UserContext";
+import { Dropdown } from 'semantic-ui-react';
 
 
 const Filter = () => {
   const user = useContext(UserContext);
   const [isPopupFilters, setPopupFilters] = useState(false);
   const [fdata, setFdata] = useState([]);
+  const colorRef = useRef();
+
   useEffect(()=>{
     axios.get("http://localhost:4000/filters",{
       headers: {
@@ -30,6 +33,15 @@ const Filter = () => {
       })
   },[])
   
+  const colors = ["red","orange","yellow","olive","green","teal","blue","violet","purple","pink","brown","grey","black"];
+  const colorList = colors.map((item, index)=>{
+    return {
+      key: index,
+      text: item,
+      value: item,
+      label: { color: item, empty: true, circular: true},
+    }
+  })
 
   const togglePopupFilters = () => {
     setPopupFilters(!isPopupFilters);
@@ -72,13 +84,13 @@ const Filter = () => {
   };
 
   const handleColorChange = (color) => {
-    setLabel((prevLabel) => ({ ...prevLabel, color: color.hex }));
+    setLabel((prevLabel) => ({ ...prevLabel, color: color }));
   };
 
   const addLabel = () => {
     axios.put("http://localhost:4000/label", {
       label_name: label.name,
-      color: label.color
+      color: label.color || "black",
     },{      
       headers: {
       authorization: user.jwt
@@ -118,7 +130,27 @@ const Filter = () => {
 
   const deleteLabel = (index) => {
     const updatedLabels = labels.filter((_, i) => i !== index);
-    setLabels(updatedLabels);
+    console.log(index+1);
+    axios.delete("http://localhost:4000/label/"+(index), {
+      headers: {
+        authorization: user.jwt
+      }
+    }).then((res)=>{
+      axios.get("http://localhost:4000/labels",{
+        headers: {
+          authorization: user.jwt
+        }}).then((data)=>{
+          let tmp = data.data;
+          let tmp1 = tmp.map((item)=>{
+            return {
+              id: item.label_id,
+              name: item.label_name,
+              color: item.color
+            }
+          })
+          setLabels(tmp1);
+        })
+    }).catch((err)=>console.log(err));
   };
 
   const editLabel = (index) => {
@@ -156,9 +188,7 @@ const Filter = () => {
                 <p className="font-bold text-l">{f.name}</p>
                 </span>
               </div>
-              <div className='flex-none h-15 '>   
-                <Button className='ui button' color="blue"><span>view</span></Button>     
-              </div> 
+
             </div>
           ))}
       </div>
@@ -193,9 +223,8 @@ const Filter = () => {
                 </span>
               </div>
               <div className='flex-none  h-15'>   
-                <Button className='ui button' color="blue" ><span>View</span></Button>  
                 <Button className='ui button' color="red" onClick={() => editLabel(l.id)}><span>Edit</span></Button>
-                <Button className='ui button' color="gray" onClick={() => deleteLabel(index)}><span>Delete</span></Button>           
+                <Button className='ui button' color="gray" onClick={() => deleteLabel(l.id)}><span>Delete</span></Button>           
               </div> 
               
             </div>
@@ -220,9 +249,19 @@ const Filter = () => {
           />
 
           <label className="font-bold text-xl">Color</label>
-          <SketchPicker color={label.color} onChange={handleColorChange} />
-
-          <Button className='ui button' color="Red" onClick={onCloseModalLabels}>Cancel</Button>
+          <Dropdown 
+                className="ml-10"
+                clearable 
+                placeholder='Choose color'
+                options={colorList} 
+                defaultValue={colorList[0]}
+                ref={colorRef}
+                selection   
+                onChange={(e, data) => {handleColorChange(data.value)}}
+            />
+          {/* <SketchPicker presetColors={[{color: "red", title: "red"}]} color={label.color} onChange={handleColorChange} /> */}
+          <div className="mt-24"></div>
+          <Button className='ui button' color="red" onClick={onCloseModalLabels}>Cancel</Button>
           <Button className='ui button' color="red" onClick={editLabelIndex !== null ? updateLabel : addLabel}>{editLabelIndex !== null ? 'Update' : 'Add'}</Button>
         </Form>
       </Modal>

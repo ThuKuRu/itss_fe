@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {v4 as uuidv4} from "uuid";
 import { Form,Button,Dropdown } from 'semantic-ui-react'
 import axios from "axios";
@@ -7,8 +7,50 @@ import { UserContext } from "../../UserContext";
 
 const TodoForm = ({input,setInput,todos,setTodos}) => {
   const user = useContext(UserContext);
+  const [labelList, setLabelList] = useState([]);
+  const [filterList, setFilterList] = useState([]);
+  useEffect(()=>{
+    axios.get("http://localhost:4000/labels", {
+        headers:{
+            authorization: user.jwt
+        }
+    }).then((data)=>{
+        let labels = data.data;
+        let tmp = labels.map((item, index)=>{
+            return {
+                key: index,
+                text: item.label_name,
+                value: item.label_id,
+                color: item.color,
+            }
+        })
+        setLabelList(tmp);
+    }).catch((err)=>{
+        console.log(err);
+    })
+    axios.get("http://localhost:4000/filters", {
+        headers:{
+            authorization: user.jwt
+        }
+    }).then((data)=>{
+        let filters = data.data;
+        let tmp = filters.map((item, index)=>{
+            return {
+                key: index,
+                text: item.filter_name,
+                value: item.filter_id,
+                color: item.color,
+            }
+        })
+        setFilterList(tmp);
+    }).catch((err)=>{
+        console.log(err);
+    })
+  },[]);
     const descriptionRef = useRef();
     const priorityRef = useRef();
+    const labelRef = useRef();
+    const filterRef = useRef();
     const onInputChange =(event) =>{setInput(event.target.value);};
     const onFormSubmit = (event) =>{
         event.preventDefault();
@@ -20,7 +62,8 @@ const TodoForm = ({input,setInput,todos,setTodos}) => {
             description: descriptionRef.current.value,
             due_date: today.getFullYear().toString() + "-"+(today.getMonth()+1).toString()+"-"+today.getDate().toString()+" "+ today.getHours().toString()+":"+today.getMinutes().toString()+":"+today.getSeconds().toString(),
             priority_id: priorityRef.current.state.value,
-            label_id: 1
+            label_id: labelRef.current.state.value || null,
+            filter_id: filterRef.current.state.value || null,
         }, {
             headers: {
                 authorization: user.jwt
@@ -76,11 +119,27 @@ const TodoForm = ({input,setInput,todos,setTodos}) => {
             />
             <div className="flex flex-row mt-4 gap-2">
                 <Dropdown 
-                    className="basis-10/12"
+                    className="basis-6/12"
                     clearable 
                     options={lvOptions} 
                     ref={priorityRef}
                     defaultValue={lvOptions[0].value} 
+                    selection   
+                />
+                 <Dropdown 
+                    className="basis-6/12"
+                    clearable 
+                    placeholder="Choose Label"
+                    options={labelList} 
+                    ref={labelRef}
+                    selection   
+                />
+                 <Dropdown 
+                    className="basis-6/12"
+                    clearable 
+                    placeholder="Choose Filter"
+                    options={filterList} 
+                    ref={filterRef}
                     selection   
                 />
             

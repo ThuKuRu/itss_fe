@@ -19,11 +19,13 @@ export const useDate = () => {
 
 
 
-const Today = () => {
+const Today = ({isP}) => {
   const {date} = useDate();
   const user = useContext(UserContext);
   const[input, setInput]=useState("");
   const[todos, setTodos]=useState([]);
+  const [reset, setReset] = useState({})
+  console.log(reset);
   useEffect(()=>{
     axios.get("http://localhost:4000/today-tasks", {
       headers: {
@@ -35,15 +37,19 @@ const Today = () => {
         return {
           id: item.task_id,
           title: item.task_name,
-          completed: false,
+          description: item.description,
+          label_id: item.label_id,
+          filter_id: item.filter_id,
+          priority_id: item.priority_id,
+          completed: item.is_finished,
+          dueDate: item.due_date,
         }
       })
       setTodos(data);
     }).catch((err)=>{
       console.log(err)
     });
-  }, []);
-
+  },[isP, reset]);
 
 
   return (
@@ -72,6 +78,7 @@ const Today = () => {
         <TodosList 
           todos={todos}
           setTodos={setTodos}
+          setReset = {setReset}
         />
       </div>
     </div>

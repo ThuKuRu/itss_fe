@@ -8,11 +8,14 @@ import { PiCalendarBlankBold } from "react-icons/pi";
 import { IoIosFlag } from "react-icons/io";
 import axios from "axios";
 import { UserContext } from "../../UserContext";
+import Addtask from "../popup/AddTaskForm";
 const localizer = momentLocalizer(moment);
 //   { title: "Task 1", start: new Date(2023, 10, 20), priority: "1" },
-const Upcomming = () => {
+const Upcomming = ({isP}) => {
   const [tasks, setTasks] = useState([]);
   const user = useContext(UserContext);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [date, setDate] = useState(null);
   useEffect(()=>{
     axios.get("http://localhost:4000/all-tasks", {
       headers: {
@@ -20,7 +23,6 @@ const Upcomming = () => {
       }
     }).then((res)=>{
       let dataRaw = res.data;
-      console.log(dataRaw);
       let data = dataRaw.map((item)=>{
         let date = new Date(item.due_date);
         return{
@@ -30,13 +32,14 @@ const Upcomming = () => {
           start: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
           priority: item.priority_id,
           label: item.label_id,
+          completed: item.is_finished,
         }
       })
       setTasks(data);
     }).catch((err)=>{
       console.log(err);
     })
-  },[]);
+  },[isP, isPopupOpen]);
   const CustomToolbar = (toolbar) => {
     const goToBack = () => {
       toolbar.onNavigate("PREV");
@@ -75,12 +78,11 @@ const Upcomming = () => {
     end: moment(task.start).add(1, "days").toDate(), // Set end date as one day after start for clarity
     priority: task.priority,
     type: "data",
+    completed: task.completed,
   }));
   const now = new Date(Date.now())
   const currentYear = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   for(var i=-175; i < 175; i++){
-    console.log(moment(currentYear).add(i, "days").toDate().toDateString())
-    console.log("mai: "+moment(currentYear).add(i+1, "days").toDate().toDateString())
     events.push({
       start: moment(currentYear).add(i, "days").toDate(),
       end: moment(currentYear).add(i+1, "days").toDate(),
@@ -90,7 +92,6 @@ const Upcomming = () => {
 
   const EventComponent = ({ event }) => {
     let priorityColor = "";
-    console.log(event.priority);
     switch (event.priority) {
       case 1:
         priorityColor = "text-red-500"; // Class for priority 1
@@ -111,9 +112,10 @@ const Upcomming = () => {
     // const tasksCount = countTasksPerDay(tasks, event.start);
     if(event.type === "data"){
       return (
-        <div className={event.start < today ? "hidden-event" : ""}>
+        <div className={event.start < today || event.completed === 1 ? "hidden-event" : ""}>
           <div className="flex mb-2">
-            <input type="radio" />
+            { event.completed === 1? <input type="radio" checked/> : <input type="radio"/>}
+            
             <p className="p-1 text-[14px]">{event.title}</p>
           </div>
           <div
@@ -130,7 +132,7 @@ const Upcomming = () => {
       );
     }else{
       return(
-        <div className="flex items-center justify-center font-semibold"><span style={{color: "red"}}>+</span>{"   "}<span style={{color:"red"}}> Add Task</span></div>
+        <div className="flex items-center justify-center font-semibold" onClick={()=>{setDate(event.start);setIsPopupOpen(true)}}><span style={{color: "red"}}>+</span>{"   "}<span style={{color:"red"}}> Add Task</span></div>
       )
     }
   };
@@ -237,6 +239,7 @@ const Upcomming = () => {
         }}
         dayPropGetter={dayPropGetter}
       />
+    {isPopupOpen === true? <Addtask setPopupOpen={setIsPopupOpen} date={date}></Addtask>: <></>}
     </div>
   );
 };
