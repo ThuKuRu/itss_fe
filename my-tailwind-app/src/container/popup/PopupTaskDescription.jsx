@@ -1,8 +1,36 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-function PopupDescription({taskName, taskDescription, taskDate, taskPriority, taskLabel, back}) {
-    let date = new Date(taskDate);
+import { UserContext } from "../../UserContext";
+function PopupDescription({task, back}) {
+    const user = useContext(UserContext);
+    let date = new Date(task.dueDate);
     let dueDate = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
+    const [label, setLabel] = useState(null);
+    const [filter, setFilter] = useState(null);
+    useEffect(()=>{
+        if (task.label_id != null) {
+            axios.get("http://localhost:4000/label/" + task.label_id,{
+                headers: {
+                    authorization: user.jwt
+                }
+            }).then((data)=>{
+                setLabel({name: data.data[0].label_name, color: data.data[0].color})
+            }).catch((err)=>{
+                console.log(err);
+            })
+        }
+        if (task.filter_id != null) {
+            axios.get("http://localhost:4000/filter/" + task.filter_id,{
+                headers: {
+                    authorization: user.jwt
+                }
+            }).then((data)=>{
+                setFilter({name: data.data[0].filter_name, color: data.data[0].color})
+            }).catch((err)=>{
+                console.log(err);
+            })
+        }
+    },[])
     const popupContainer ={
         position: 'fixed',
         top: '50%',
@@ -31,16 +59,20 @@ function PopupDescription({taskName, taskDescription, taskDate, taskPriority, ta
         <div style={popupBackground}>
             <div style={popupContainer}>
             <div style={{display: "flex"}}>
-            <button style={{position:"absolute", top: "10px", left: "10px", color: "blue", padding:"5px", border:"1px solid gray", borderRadius: "5px"}} onClick={()=>{back()}}>Back</button>
-                    <div style={{margin: "0",width: "400px", height: "500px", borderRight: "2px solid gray", padding: "40px 30px 30px 30px"}}>
-                        <h2>{taskName}</h2>
-                        <p>{taskDescription}</p>
+            <button className="ui button" style={{position:"absolute", top: "10px", left: "10px", color: "blue", border:"1px solid #d9d9d9"}} onClick={()=>{back()}}>Back</button>
+                    <div style={{width: "400px", height: "500px", borderRight: "2px solid gray", padding: "40px 30px 30px 30px"}}>
+                        <h2 className="text-[24px] mt-[20px] pt-[20px]">{task.title}</h2>
+                        <p>{task.description}</p>
                     </div>
-                    <div style={{width: "200px", background: "gray", borderRadius: "0px 12px 12px 0px", padding: "40px 20px 20px 20px"}}>
+                    <div style={{marginTop: 0, width: "200px", background: "#d9d9d9", borderRadius: "0px 12px 12px 0px", padding: "40px 20px 20px 20px"}}>
                         <span style={{fontWeight:"bold", color: "blue"}}>Due date</span>
-                        <p style={{color: "white"}}>{dueDate}</p>
+                        <p className="mt-[4px]">{dueDate}</p>
                         <span style={{fontWeight: "bold", color: "blue"}}>Priority</span>
-                        <p style={{color: "white"}}>{"Priority "+taskPriority}</p>
+                        <p className="mt-[4px]">{"Priority "+ task.priority_id}</p>
+                        <span style={{fontWeight: "bold", color: "blue"}}>Label</span>
+                        {label==null? <p className="mt-[4px]">Không có Label</p>:<p className="mt-[4px]" style={{color: label.color}}>{label.name}</p> }
+                        <span style={{fontWeight: "bold", color: "blue"}}>Filter</span>
+                        {filter == null ?<p className="mt-[4px]">Không có filter</p>:<p className="mt-[4px]" style={{color: filter.color}}>{filter.name}</p> }
                     </div>
                 </div> 
             </div>

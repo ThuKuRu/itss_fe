@@ -8,11 +8,14 @@ import { PiCalendarBlankBold } from "react-icons/pi";
 import { IoIosFlag } from "react-icons/io";
 import axios from "axios";
 import { UserContext } from "../../UserContext";
+import Addtask from "../popup/AddTaskForm";
 const localizer = momentLocalizer(moment);
 //   { title: "Task 1", start: new Date(2023, 10, 20), priority: "1" },
-const Upcomming = () => {
+const Upcomming = ({isP}) => {
   const [tasks, setTasks] = useState([]);
   const user = useContext(UserContext);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [date, setDate] = useState(null);
   useEffect(()=>{
     axios.get("http://localhost:4000/all-tasks", {
       headers: {
@@ -20,7 +23,6 @@ const Upcomming = () => {
       }
     }).then((res)=>{
       let dataRaw = res.data;
-      console.log(dataRaw);
       let data = dataRaw.map((item)=>{
         let date = new Date(item.due_date);
         return{
@@ -30,13 +32,14 @@ const Upcomming = () => {
           start: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
           priority: item.priority_id,
           label: item.label_id,
+          completed: item.is_finished,
         }
       })
       setTasks(data);
     }).catch((err)=>{
       console.log(err);
     })
-  },[]);
+  },[isP, isPopupOpen]);
   const CustomToolbar = (toolbar) => {
     const goToBack = () => {
       toolbar.onNavigate("PREV");
@@ -54,14 +57,14 @@ const Upcomming = () => {
       <div className="flex justify-between mb-3 text-red-500">
         <button onClick={goToBack} className="flex items-center">
           <PiCaretDoubleLeftBold color="#a9a9a9" />
-          <p className="text-sm text-gray-400 ml-1 pb-[2px] font-2">Back</p>
+          <p className="text-[14px] text-gray-400 ml-1 pb-[2px] font-2">Back</p>
         </button>
         <div className="flex items-center cursor-pointer" onClick={goToWeek}>
-          <PiCalendarBlankBold style={{ fontSize: "18px" }} />
-          <p className="font-semibold ml-1 pb-[2px]">{toolbar.label}</p>
+          <PiCalendarBlankBold style={{ fontSize: "24px" }} />
+          <p className="font-semibold ml-1 pb-[2px] text-[24px]">{toolbar.label}</p>
         </div>
         <button onClick={goToNext} className="flex items-center">
-          <p className="text-sm text-gray-400 mr-1 mb-0 font-2">Next</p>
+          <p className="text-[14px] text-gray-400 mr-1 mb-0 font-2">Next</p>
           <PiCaretDoubleRightBold color="#a9a9a9" />
         </button>
       </div>
@@ -75,12 +78,11 @@ const Upcomming = () => {
     end: moment(task.start).add(1, "days").toDate(), // Set end date as one day after start for clarity
     priority: task.priority,
     type: "data",
+    completed: task.completed,
   }));
   const now = new Date(Date.now())
   const currentYear = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   for(var i=-175; i < 175; i++){
-    console.log(moment(currentYear).add(i, "days").toDate().toDateString())
-    console.log("mai: "+moment(currentYear).add(i+1, "days").toDate().toDateString())
     events.push({
       start: moment(currentYear).add(i, "days").toDate(),
       end: moment(currentYear).add(i+1, "days").toDate(),
@@ -90,7 +92,6 @@ const Upcomming = () => {
 
   const EventComponent = ({ event }) => {
     let priorityColor = "";
-    console.log(event.priority);
     switch (event.priority) {
       case 1:
         priorityColor = "text-red-500"; // Class for priority 1
@@ -111,16 +112,17 @@ const Upcomming = () => {
     // const tasksCount = countTasksPerDay(tasks, event.start);
     if(event.type === "data"){
       return (
-        <div className={event.start < today ? "hidden-event" : ""}>
+        <div className={event.start < today || event.completed === 1 ? "hidden-event" : ""}>
           <div className="flex mb-2">
-            <input type="radio" />
-            <p className="p-1 text-xs">{event.title}</p>
+            { event.completed === 1? <input type="radio" checked/> : <input type="radio"/>}
+            
+            <p className="p-1 text-[14px]">{event.title}</p>
           </div>
           <div
             className={
               event.start < today
-                ? "hidden-event flex items-center text-[10px] font-medium py-1"
-                : `flex items-center text-[10px] font-medium py-1 ${priorityColor}`
+                ? "hidden-event flex items-center text-[12px] font-medium py-1"
+                : `flex items-center text-[12px] font-medium py-1 ${priorityColor}`
             }
           >
             <IoIosFlag color={`${priorityColor}`} />
@@ -130,7 +132,7 @@ const Upcomming = () => {
       );
     }else{
       return(
-        <div><span style={{color: "red"}}>+</span>{"   "}<span style={{color:"gray"}}>Add Task</span></div>
+        <div className="flex items-center justify-center font-semibold" onClick={()=>{setDate(event.start);setIsPopupOpen(true)}}><span style={{color: "red"}}>+</span>{"   "}<span style={{color:"red"}}> Add Task</span></div>
       )
     }
   };
@@ -163,6 +165,7 @@ const Upcomming = () => {
             padding: 10px 0; 
             border-bottom: 2px solid #a9a9a9  !important;
             margin: 0 4px;
+            font-size: 16px;
           }
           .rbc-row-content {
             margin-top: 5px;
@@ -236,6 +239,7 @@ const Upcomming = () => {
         }}
         dayPropGetter={dayPropGetter}
       />
+    {isPopupOpen === true? <Addtask setPopupOpen={setIsPopupOpen} date={date}></Addtask>: <></>}
     </div>
   );
 };

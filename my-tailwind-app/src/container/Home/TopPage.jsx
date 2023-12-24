@@ -8,7 +8,7 @@ const TopPage = () => {
   const [tab, setTab] = useState("today");
   const user = useContext(UserContext);
   const navigate = useNavigate();
-  console.log(user);
+  const [isPopupOpen, setPopupOpen] = useState(false);
   useEffect(()=>{
     if (user.jwt === "") {
       navigate("/login");
@@ -17,14 +17,13 @@ const TopPage = () => {
       setTab("searchForAdmin");
     }
   },[user])
-
-
+    console.log("top page reset");
 
   return (
     <div className="flex gap-4">
-      <Sidebar className="w-1/5" tab={tab} setTab={setTab} />
-      <Main className="w-4/5 text-blue-400" tab={tab} />
-    </div>
+      <Sidebar className="w-1/5" tab={tab} setTab={setTab} isPopupOpen={isPopupOpen} setPopupOpen={(arg)=>{setPopupOpen(arg)}} />
+      <Main className="w-4/5 text-blue-400" tab={tab} isPopupOpen={isPopupOpen}/>
+    </div> 
   );
 };
 

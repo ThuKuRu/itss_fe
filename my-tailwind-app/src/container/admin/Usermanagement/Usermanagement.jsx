@@ -100,21 +100,21 @@ const Usermanagement = () => {
       </div>
       <hr/>
       
-      <div className="flex flex-col w-[80vw] h-fit  rounded px-3 pl-3 p-2" style={{maxWidth: "800px"}}>
+      <div className="flex flex-col w-[78vw] h-fit rounded px-3 pl-3 p-2">
           {userVisible.length > 0 && userVisible.map((user,index) => (
-            <div key={index} className="flex mt-5">
-              <div className='grow h-15'>
+            <div key={index} className="flex items-center p-[10px] border-solid border-gray-300 border-b-[1px]">
+              <div className='grow h-15 border-none'>
                 <span>
                 <h3>{user.name}</h3>
                 {user.task} tasks
                 </span>
-                <hr className="mt-2" />
               </div>
-              <div className='flex-none  h-15'>   
-                <button style={{background: "blue", color:"white"}} className='ui button' color="red"><span>View</span></button>
-                <button style={{background: "red", color: "white"}} className='ui button' color="blue"><span>Edit</span></button>
-                <button style={{background: "green", color:"white"}} className='ui button' color="gray"><span>Delete</span></button>           
+              <div className='flex-none'>   
+                <button style={{background: "blue", color:"white", marginLeft:"5px"}} className='ui button' color="red"><span>View</span></button>
+                <button style={{marginLeft:"5px", background: "red", color: "white"}} className='ui button' color="blue"><span>Edit</span></button>
+                <button style={{marginLeft:"5px", background: "green", color:"white"}} className='ui button' color="gray"><span>Delete</span></button>           
               </div> 
+              {/* <hr className="mt-[1px]"/> */}
             </div>    
           ))}
           
